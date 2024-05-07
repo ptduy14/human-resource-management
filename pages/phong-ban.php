@@ -64,10 +64,16 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idRoom'];
-    $delete = "DELETE FROM phong_ban WHERE id = $id";
-    mysqli_query($conn, $delete);
-    $success['success'] = 'Xóa phòng ban thành công.';
-    echo '<script>setTimeout("window.location=\'phong-ban.php?p=staff&a=room\'",1000);</script>';
+    $sql_nhanvien_belongs_to_phongban = "SELECT * FROM nhanvien WHERE phong_ban_id = $id";
+    $nhanvien_belongs_to_phongban = mysqli_query($conn, $sql_nhanvien_belongs_to_phongban);
+    if (mysqli_num_rows($nhanvien_belongs_to_phongban) > 0) { 
+      echo "<script type='text/javascript'>alert('Không thể xóa phòng ban này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
+    } else {
+      $delete = "DELETE FROM phong_ban WHERE id = $id";
+      mysqli_query($conn, $delete);
+      $success['success'] = 'Xóa phòng ban thành công.';
+      echo '<script>setTimeout("window.location=\'phong-ban.php?p=staff&a=room\'",1000);</script>';
+    } 
   }
 
 ?>
