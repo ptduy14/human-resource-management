@@ -64,10 +64,16 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idLevel'];
-    $delete = "DELETE FROM trinh_do WHERE id = $id";
-    mysqli_query($conn, $delete);
-    $success['success'] = 'Xóa trình độ thành công.';
-    echo '<script>setTimeout("window.location=\'trinh-do.php?p=staff&a=level\'",1000);</script>';
+    $sql_nhanvien_have_trinhdo = "SELECT * FROM nhanvien WHERE trinh_do_id = $id";
+    $nhanvien_have_trinhdo = mysqli_query($conn, $sql_nhanvien_have_trinhdo);
+    if (mysqli_num_rows($nhanvien_have_trinhdo) > 0) {
+      echo "<script type='text/javascript'>alert('Không thể xóa trình độ này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
+    } else {
+      $delete = "DELETE FROM trinh_do WHERE id = $id";
+      mysqli_query($conn, $delete);
+      $success['success'] = 'Xóa trình độ thành công.';
+      echo '<script>setTimeout("window.location=\'trinh-do.php?p=staff&a=level\'",1000);</script>';
+    }
   }
 
 ?>
