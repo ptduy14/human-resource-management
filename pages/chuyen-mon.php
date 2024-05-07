@@ -64,10 +64,16 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idSpecial'];
-    $delete = "DELETE FROM chuyen_mon WHERE id = $id";
-    mysqli_query($conn, $delete);
-    $success['success'] = 'Xóa chuyên môn thành công.';
-    echo '<script>setTimeout("window.location=\'chuyen-mon.php?p=staff&a=specialize\'",1000);</script>';
+    $sql_nhanvien_have_chuyenmon = "SELECT * FROM nhanvien WHERE chuyen_mon_id = $id";
+    $nhanvien_have_chuyenmon = mysqli_query($conn, $sql_nhanvien_have_chuyenmon);
+    if (mysqli_num_rows($nhanvien_have_chuyenmon) > 0) {
+      echo "<script type='text/javascript'>alert('Không thể xóa chuyên môn này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
+    } else {
+      $delete = "DELETE FROM chuyen_mon WHERE id = $id";
+      mysqli_query($conn, $delete);
+      $success['success'] = 'Xóa chuyên môn thành công.';
+      echo '<script>setTimeout("window.location=\'chuyen-mon.php?p=staff&a=specialize\'",1000);</script>';
+    }
   }
 
 ?>
