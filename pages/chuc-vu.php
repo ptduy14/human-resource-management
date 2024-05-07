@@ -65,18 +65,24 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idPosition'];
-    $delete = "DELETE FROM chuc_vu WHERE id = $id";
-    #$run = mysqli_query($conn, $delete) or die(mysql_error());
-    $run = $conn->query ($delete);
-    if ($run) {
-      $success['success'] = 'Xóa chức vụ thành công.';
-      echo  "";
-      echo  $run;
-      // echo '<script>setTimeout("window.location=\'chuc-vu.php?p=staff&a=position\'",1000);</script>';
+    $sql_nhanvien_have_chucvu = "SELECT * FROM nhanvien WHERE chuc_vu_id = $id";
+    $nhanvien_have_chucvu = mysqli_query($conn, $sql_nhanvien_have_chucvu);
+    if (mysqli_num_rows($nhanvien_have_chucvu) > 0) {
+      echo "<script type='text/javascript'>alert('Không thể xóa chức vụ này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
     } else {
-       echo "deletion field";
-       echo '<script>setTimeout("window.location=\'chuc-vu.php?p=staff&a=position\'",1000);</script>';
-  }
+      $delete = "DELETE FROM chuc_vu WHERE id = $id";
+      #$run = mysqli_query($conn, $delete) or die(mysql_error());
+      $run = $conn->query ($delete);
+      if ($run) {
+        $success['success'] = 'Xóa chức vụ thành công.';
+        echo  "";
+        echo  $run;
+        // echo '<script>setTimeout("window.location=\'chuc-vu.php?p=staff&a=position\'",1000);</script>';
+      } else {
+        echo "deletion field";
+        echo '<script>setTimeout("window.location=\'chuc-vu.php?p=staff&a=position\'",1000);</script>';
+      } 
+    }
     // $success['success'] = 'Xóa chức vụ thành công.';
     // echo '<script>setTimeout("window.location=\'chuc-vu.php?p=staff&a=position\'",1000);</script>';
   } 
