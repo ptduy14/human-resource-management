@@ -66,12 +66,18 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idType'];
-    $delete = "DELETE FROM loai_nv WHERE id = $id";
-    $result = mysqli_query($conn, $delete);
-    if($result)
-    {
-      $success['success'] = 'Xóa loại nhân viên thành công.';
-      echo '<script>setTimeout("window.location=\'loai-nhan-vien.php?p=staff&a=employee-type\'",1000);</script>';
+    $sql_nhanvien_belongs_to_loainhanvien = "SELECT * FROM nhanvien WHERE loai_nv_id = $id";
+    $nhanvien_belongs_to_loainhanvien = mysqli_query($conn, $sql_nhanvien_belongs_to_loainhanvien);
+    if (mysqli_num_rows($nhanvien_belongs_to_loainhanvien) > 0) {
+      echo "<script type='text/javascript'>alert('Không thể xóa loại nhân viên này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
+    } else {
+      $delete = "DELETE FROM loai_nv WHERE id = $id";
+      $result = mysqli_query($conn, $delete);
+      if($result)
+      {
+        $success['success'] = 'Xóa loại nhân viên thành công.';
+        echo '<script>setTimeout("window.location=\'loai-nhan-vien.php?p=staff&a=employee-type\'",1000);</script>';
+      }
     }
   }
 
