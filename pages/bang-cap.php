@@ -66,10 +66,16 @@ if(isset($_SESSION['username']) && isset($_SESSION['level']))
     $showMess = true;
 
     $id = $_POST['idCertificate'];
-    $delete = "DELETE FROM bang_cap WHERE id = $id";
-    mysqli_query($conn, $delete);
-    $success['success'] = 'Xóa bằng cấp thành công.';
-    echo '<script>setTimeout("window.location=\'bang-cap.php?p=staff&a=certificate\'",1000);</script>';
+    $sql_nhanvien_have_bangcap = "SELECT * FROM nhanvien WHERE bang_cap_id = $id";
+    $nhanvien_have_bangcap = mysqli_query($conn, $sql_nhanvien_have_bangcap);
+    if (mysqli_num_rows($nhanvien_have_bangcap) > 0) {
+      echo "<script type='text/javascript'>alert('Không thể xóa bằng cấp này, vui lòng kiểm tra hồ sơ nhân viên');</script>";
+    } else {
+      $delete = "DELETE FROM bang_cap WHERE id = $id";
+      mysqli_query($conn, $delete);
+      $success['success'] = 'Xóa bằng cấp thành công.';
+      echo '<script>setTimeout("window.location=\'bang-cap.php?p=staff&a=certificate\'",1000);</script>';
+    }
   }
 
 ?>
